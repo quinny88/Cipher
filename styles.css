@@ -1,48 +1,109 @@
-/* Light Mode (default) */
+/* Base Styles */
 body {
-    background-color: #fff;
-    color: #000;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
     transition: background-color 0.3s, color 0.3s;
-    font-family: Arial, sans-serif;
 }
 
 .container {
     max-width: 800px;
     margin: auto;
     padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 /* Dark Mode */
 body.dark-mode {
-    background-color: #333;
-    color: #fff;
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
-/* Textarea and Buttons */
-textarea {
-    width: 100%;
-    height: 100px;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+body.dark-mode .container {
+    background-color: #1e1e1e;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
 button {
-    padding: 10px;
+    padding: 10px 20px;
     margin: 5px;
     border: none;
     border-radius: 5px;
     background-color: #007bff;
-    color: white;
+    color: #fff;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
-/* Tooltip Styling */
-[data-tippy-content] {
-    font-size: 14px;
+textarea {
+    width: 100%;
+    height: 120px;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    font-size: 16px;
 }
+
+select, input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Settings Menu */
+.settings {
+    margin-bottom: 20px;
+}
+
+.settings label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* File Upload Controls */
+.file-controls {
+    display: flex;
+    align-items: center;
+}
+
+.file-controls input[type="file"] {
+    flex: 1;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* Output Area */
+#output {
+    margin-top: 20px;
+}
+
+#output h2 {
+    margin-bottom: 10px;
+}
+
+#previewArea {
+    margin-top: 20px;
+}
+
