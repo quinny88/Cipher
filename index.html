@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cipher Tool</title>
+    <title>Ultimate Cipher Tool</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Cipher Tool</h1>
-        
-        <!-- Theme Toggle Button -->
-        <button id="themeToggle">🌙 Toggle Dark Mode</button>
-        
-        <!-- Settings Menu -->
-        <div class="settings">
+        <button id="themeToggle">Toggle Dark Mode</button>
+        <div class="feedback">
+            <h2>We'd love your feedback!</h2>
+            <form id="feedbackForm">
+                <label for="feedbackText">Your Feedback:</label>
+                <textarea id="feedbackText" placeholder="Share your thoughts here..."></textarea>
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </div>
+    </header>
+    <main>
+        <section id="controls">
             <label for="methodSelect">Choose Method:</label>
             <select id="methodSelect">
                 <option value="caesar">Caesar Cipher</option>
@@ -27,44 +34,41 @@
                 <option value="vigenere">Vigenère</option>
                 <option value="railfence">Rail Fence</option>
                 <option value="custom">Custom Code</option>
+                <option value="playfair">Playfair Cipher</option>
+                <option value="substitution">Substitution Cipher</option>
+                <option value="transposition">Transposition Cipher</option>
+                <option value="columnar">Columnar Transposition</option>
+                <option value="scytale">Scytale Cipher</option>
+                <option value="xorcipher">XOR Cipher</option>
+                <option value="affine">Affine Cipher</option>
+                <option value="keyword">Keyword Cipher</option>
+                <option value="base32">Base32</option>
+                <option value="base58">Base58</option>
             </select>
-
-            <!-- Custom Code Input -->
-            <div id="customCodeWrapper" class="hidden">
-                <label for="customCode">Custom 6-Digit Code:</label>
-                <input type="text" id="customCode" maxlength="6" placeholder="Enter 6-Digit Code">
+            <div id="customCodeSection">
+                <label for="customCode">Custom Code:</label>
+                <input type="text" id="customCode" placeholder="Enter Custom Code or Parameters">
             </div>
-
-            <!-- File Upload -->
-            <div class="file-controls">
-                <input type="file" id="fileInput">
-                <button id="uploadButton">Upload</button>
-                <a id="downloadLink" class="hidden">Download Result</a>
+            <input type="file" id="fileInput">
+            <textarea id="inputText" placeholder="Enter text to encode/decode"></textarea>
+            <button id="encodeButton">Encode</button>
+            <button id="decodeButton">Decode</button>
+            <div id="output">
+                <h2>Output:</h2>
+                <pre id="outputText"></pre>
+                <h2>Detected Code Type:</h2>
+                <p id="detectedType">Plain Text</p>
             </div>
-        </div>
-
-        <!-- Text Areas and Buttons -->
-        <div class="textarea-controls">
-            <textarea id="inputText" placeholder="Enter text here..."></textarea>
-            <div class="button-group">
-                <button id="encodeButton">Encode</button>
-                <button id="decodeButton">Decode</button>
-            </div>
-        </div>
-
-        <!-- Output Area -->
-        <div id="output">
-            <h2>Output:</h2>
-            <p id="outputText"></p>
-            <p id="detectedType" class="hidden"></p>
-        </div>
-
-        <!-- Real-time Preview -->
-        <div id="previewArea" class="hidden">
-            <h3>Real-time Preview:</h3>
-            <p id="previewText"></p>
-        </div>
-    </div>
-    <script src="script.js"></script>
+        </section>
+        <section id="realTimePreview">
+            <h2>Real-time Preview:</h2>
+            <pre id="previewText"></pre>
+        </section>
+        <section id="info">
+            <h2>Encoding/Decoding Methods:</h2>
+            <p id="infoText">Select an encoding/decoding method to view details.</p>
+        </section>
+    </main>
 </body>
 </html>
+
