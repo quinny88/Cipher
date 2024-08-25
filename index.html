@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Cipher Tool</title>
+    <title>Cipher Tool</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
-    <header>
+    <div class="container">
         <h1>Cipher Tool</h1>
-        <button id="themeToggle">Toggle Dark Mode</button>
-        <div class="feedback">
-            <h2>We'd love your feedback!</h2>
-            <form id="feedbackForm">
-                <label for="feedbackText">Your Feedback:</label>
-                <textarea id="feedbackText" placeholder="Share your thoughts here..."></textarea>
-                <button type="submit">Submit Feedback</button>
-            </form>
+        <button id="toggleDarkMode">Toggle Dark Mode</button>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="encodeDecodeTab">Encode/Decode</button>
+            <button class="tab-button" data-tab="autoDetectTab">Auto Detect</button>
+            <button class="tab-button" data-tab="infoTab">Code Info</button>
+            <button class="tab-button" data-tab="settingsTab">Settings</button>
         </div>
-    </header>
-    <main>
-        <section id="controls">
+
+        <div id="encodeDecodeTab" class="tab-content active">
             <label for="methodSelect">Choose Method:</label>
             <select id="methodSelect">
                 <option value="caesar">Caesar Cipher</option>
@@ -34,41 +32,50 @@
                 <option value="vigenere">Vigenère</option>
                 <option value="railfence">Rail Fence</option>
                 <option value="custom">Custom Code</option>
-                <option value="playfair">Playfair Cipher</option>
-                <option value="substitution">Substitution Cipher</option>
-                <option value="transposition">Transposition Cipher</option>
-                <option value="columnar">Columnar Transposition</option>
-                <option value="scytale">Scytale Cipher</option>
-                <option value="xorcipher">XOR Cipher</option>
-                <option value="affine">Affine Cipher</option>
-                <option value="keyword">Keyword Cipher</option>
-                <option value="base32">Base32</option>
-                <option value="base58">Base58</option>
             </select>
-            <div id="customCodeSection">
-                <label for="customCode">Custom Code:</label>
-                <input type="text" id="customCode" placeholder="Enter Custom Code or Parameters">
+
+            <div id="customCodeContainer" class="hidden">
+                <label for="customCodeInput">Enter 6-Digit Code:</label>
+                <input type="text" id="customCodeInput" maxlength="6" placeholder="6 alphanumeric characters">
             </div>
+
+            <textarea id="inputText" placeholder="Enter text here..."></textarea>
+            <div>
+                <button id="encodeButton">Encode</button>
+                <button id="decodeButton">Decode</button>
+            </div>
+
+            <label for="fileInput">Upload File:</label>
             <input type="file" id="fileInput">
-            <textarea id="inputText" placeholder="Enter text to encode/decode"></textarea>
-            <button id="encodeButton">Encode</button>
-            <button id="decodeButton">Decode</button>
-            <div id="output">
-                <h2>Output:</h2>
-                <pre id="outputText"></pre>
-                <h2>Detected Code Type:</h2>
-                <p id="detectedType">Plain Text</p>
+            <textarea id="outputText" placeholder="Output will appear here..." readonly></textarea>
+            <div id="detectedType">Detected Code Type: <span id="detectedTypeText">Plain Text</span></div>
+            <div id="realTimePreview">Real-time Preview: <span id="previewText"></span></div>
+        </div>
+
+        <div id="autoDetectTab" class="tab-content">
+            <h2>Auto Detect Code Type</h2>
+            <textarea id="autoDetectInput" placeholder="Paste code here..."></textarea>
+            <button id="detectButton">Detect</button>
+            <div id="detectResult"></div>
+        </div>
+
+        <div id="infoTab" class="tab-content">
+            <h2>Code Information</h2>
+            <div id="codeInfoContent">
+                <!-- Code info will be dynamically populated -->
             </div>
-        </section>
-        <section id="realTimePreview">
-            <h2>Real-time Preview:</h2>
-            <pre id="previewText"></pre>
-        </section>
-        <section id="info">
-            <h2>Encoding/Decoding Methods:</h2>
-            <p id="infoText">Select an encoding/decoding method to view details.</p>
-        </section>
-    </main>
+        </div>
+
+        <div id="settingsTab" class="tab-content">
+            <h2>Settings</h2>
+            <label for="themeSelect">Choose Theme:</label>
+            <select id="themeSelect">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="custom">Custom</option>
+            </select>
+            <button id="resetButton">Reset Settings</button>
+        </div>
+    </div>
 </body>
 </html>
-
