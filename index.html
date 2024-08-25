@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Encoder/Decoder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cipher Encoder/Decoder</h1>
+
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
+
+        <div class="options">
+            <label for="methodSelect">Select Method:</label>
+            <select id="methodSelect">
+                <option value="auto-detect">Auto Detect</option>
+                <option value="caesar">Caesar Cipher</option>
+                <option value="base64">Base64</option>
+                <option value="hex">Hexadecimal</option>
+                <option value="morse">Morse Code</option>
+                <option value="custom">Custom Cipher</option>
+            </select>
+        </div>
+
+        <button id="encodeBtn">Encode/Decode</button>
+
+        <textarea id="outputText" placeholder="Output will appear here..." readonly></textarea>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
