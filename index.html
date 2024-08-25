@@ -51,4 +51,42 @@
             <textarea id="inputText" placeholder="Enter text here..."></textarea>
             <div>
                 <button id="encodeButton">Encode</button>
+                <button id="decodeButton">Decode</button>
+            </div>
+
+            <label for="fileInput">Upload File:</label>
+            <input type="file" id="fileInput">
+            <textarea id="outputText" placeholder="Output will appear here..." readonly></textarea>
+            <div id="detectedType">Detected Code Type: <span id="detectedTypeText">Plain Text</span></div>
+            <div id="realTimePreview">Real-time Preview: <span id="previewText"></span></div>
+        </div>
+
+        <div id="autoDetectTab" class="tab-content">
+            <h2>Auto Detect Code Type</h2>
+            <textarea id="autoDetectInput" placeholder="Paste code here..."></textarea>
+            <button id="detectButton">Detect</button>
+            <div id="detectResult"></div>
+        </div>
+
+        <div id="infoTab" class="tab-content">
+            <h2>Code Information</h2>
+            <div id="codeInfoContent">
+                <!-- Code info will be dynamically populated -->
+            </div>
+        </div>
+
+        <div id="settingsTab" class="tab-content">
+            <h2>Settings</h2>
+            <label for="themeSelect">Choose Theme:</label>
+            <select id="themeSelect">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="custom">Custom</option>
+            </select>
+            <button id="resetButton">Reset Settings</button>
+        </div>
+    </div>
+</body>
+</html>
+
            
