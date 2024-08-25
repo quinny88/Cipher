@@ -3,11 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const methodSelect = document.getElementById('methodSelect');
     const operationSelect = document.getElementById('operationSelect');
     const settingsContainer = document.getElementById('settings');
+    const outputText = document.getElementById('outputText');
 
     function updateSettingsUI() {
         const method = methodSelect.value;
         settingsContainer.innerHTML = ''; // Clear previous settings
         
+        // Add settings UI based on method selection
         if (method === 'caesar') {
             settingsContainer.innerHTML = `
                 <label for="caesarShift">Caesar Shift:</label>
@@ -44,64 +46,82 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = document.getElementById('inputText').value;
         const method = methodSelect.value;
         const operation = operationSelect.value;
-        let resultText;
 
-        switch(method) {
-            case 'caesar':
-                const shift = parseInt(document.getElementById('caesarShift').value, 10);
-                resultText = caesarCipher(text, shift, operation);
-                break;
-            case 'base64':
-                resultText = base64EncodeDecode(text, operation);
-                break;
-            case 'hex':
-                resultText = hexEncodeDecode(text, operation);
-                break;
-            case 'morse':
-                resultText = morseEncodeDecode(text, operation);
-                break;
-            case 'rot13':
-                resultText = rot13(text, operation);
-                break;
-            case 'atbash':
-                resultText = atbash(text, operation);
-                break;
-            case 'vigenere':
-                const vigenereKey = document.getElementById('vigenereKey').value;
-                resultText = vigenereCipher(text, vigenereKey, operation);
-                break;
-            case 'binary':
-                resultText = binaryEncodeDecode(text, operation);
-                break;
-            case 'ascii':
-                resultText = asciiEncodeDecode(text, operation);
-                break;
-            case 'url':
-                resultText = urlEncodeDecode(text, operation);
-                break;
-            case 'railfence':
-                const railFenceLevel = parseInt(document.getElementById('railFenceLevel').value, 10);
-                resultText = railFenceCipher(text, railFenceLevel, operation);
-                break;
-            case 'playfair':
-                const playfairKey = document.getElementById('playfairKey').value;
-                resultText = playfairCipher(text, playfairKey, operation);
-                break;
-            case 'transposition':
-                const transpositionKey = document.getElementById('transpositionKey').value;
-                resultText = transpositionCipher(text, transpositionKey, operation);
-                break;
-            case 'custom':
-                resultText = customEncodeDecode(text, operation);
-                break;
-            case 'auto-detect':
-                resultText = autoDetectAndDecode(text);
-                break;
-            default:
-                resultText = 'Unsupported encoding';
+        let resultText;
+        let cipherType = '';
+
+        if (method === 'auto-detect') {
+            ({ resultText, cipherType } = autoDetectAndDecode(text));
+        } else {
+            switch(method) {
+                case 'caesar':
+                    const shift = parseInt(document.getElementById('caesarShift').value, 10);
+                    resultText = caesarCipher(text, shift, operation);
+                    cipherType = 'Caesar Cipher';
+                    break;
+                case 'base64':
+                    resultText = base64EncodeDecode(text, operation);
+                    cipherType = 'Base64';
+                    break;
+                case 'hex':
+                    resultText = hexEncodeDecode(text, operation);
+                    cipherType = 'Hexadecimal';
+                    break;
+                case 'morse':
+                    resultText = morseEncodeDecode(text, operation);
+                    cipherType = 'Morse Code';
+                    break;
+                case 'rot13':
+                    resultText = rot13(text, operation);
+                    cipherType = 'ROT13';
+                    break;
+                case 'atbash':
+                    resultText = atbash(text, operation);
+                    cipherType = 'Atbash Cipher';
+                    break;
+                case 'vigenere':
+                    const vigenereKey = document.getElementById('vigenereKey').value;
+                    resultText = vigenereCipher(text, vigenereKey, operation);
+                    cipherType = 'Vigenère Cipher';
+                    break;
+                case 'binary':
+                    resultText = binaryEncodeDecode(text, operation);
+                    cipherType = 'Binary';
+                    break;
+                case 'ascii':
+                    resultText = asciiEncodeDecode(text, operation);
+                    cipherType = 'ASCII';
+                    break;
+                case 'url':
+                    resultText = urlEncodeDecode(text, operation);
+                    cipherType = 'URL Encoding';
+                    break;
+                case 'railfence':
+                    const railFenceLevel = parseInt(document.getElementById('railFenceLevel').value, 10);
+                    resultText = railFenceCipher(text, railFenceLevel, operation);
+                    cipherType = 'Rail Fence Cipher';
+                    break;
+                case 'playfair':
+                    const playfairKey = document.getElementById('playfairKey').value;
+                    resultText = playfairCipher(text, playfairKey, operation);
+                    cipherType = 'Playfair Cipher';
+                    break;
+                case 'transposition':
+                    const transpositionKey = document.getElementById('transpositionKey').value;
+                    resultText = transpositionCipher(text, transpositionKey, operation);
+                    cipherType = 'Transposition Cipher';
+                    break;
+                case 'custom':
+                    resultText = customEncodeDecode(text, operation);
+                    cipherType = 'Custom Cipher';
+                    break;
+                default:
+                    resultText = 'Unsupported method';
+                    cipherType = 'Unknown';
+            }
         }
-        
-        document.getElementById('outputText').value = resultText;
+
+        outputText.value = `Detected Cipher: ${cipherType}\n\nResult:\n${resultText}`;
     });
 
     // Caesar Cipher
@@ -183,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Binary Encoding/Decoding
     function binaryEncodeDecode(text, operation) {
         if (operation === 'decode') {
-            return text.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+            return text.split(/\s+/).map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
         } else {
             return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
         }
@@ -333,18 +353,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Auto-detection and Decoding
     function autoDetectAndDecode(text) {
-        if (/^[0-9a-f ]+$/i.test(text)) {
-            return hexEncodeDecode(text, 'decode');
-        } else if (/^[A-Za-z0-9+/=]+$/.test(text)) {
-            return base64EncodeDecode(text, 'decode');
+        let resultText = 'Unknown encoding';
+        let cipherType = 'Unknown';
+
+        if (/^[01\s]+$/.test(text)) {
+            resultText = binaryEncodeDecode(text, 'decode');
+            cipherType = 'Binary';
+        } else if (/^[0-9a-f\s]+$/i.test(text)) {
+            resultText = hexEncodeDecode(text, 'decode');
+            cipherType = 'Hexadecimal';
         } else if (/^[.\-/ ]+$/.test(text)) {
-            return morseEncodeDecode(text, 'decode');
-        } else if (/^[01\s]+$/.test(text)) {
-            return binaryEncodeDecode(text, 'decode');
+            resultText = morseEncodeDecode(text, 'decode');
+            cipherType = 'Morse Code';
         } else if (/^[0-9\s]+$/.test(text)) {
-            return asciiEncodeDecode(text, 'decode');
+            resultText = asciiEncodeDecode(text, 'decode');
+            cipherType = 'ASCII';
         } else {
-            return caesarCipher(text, -3, 'decode'); // Default to Caesar Cipher with shift of -3
+            resultText = 'Unknown encoding format';
+            cipherType = 'Unknown';
         }
+
+        return { resultText, cipherType };
     }
 });
