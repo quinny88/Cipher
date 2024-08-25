@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const decodeButton = document.getElementById("decodeButton");
     const customCodeInput = document.getElementById("customCode");
 
+    // Helper functions for different encoding methods
     function caesarCipher(text, shift) {
         return text.split('').map(char => {
             if (char.match(/[a-z]/i)) {
@@ -99,6 +100,24 @@ document.addEventListener("DOMContentLoaded", function() {
         return rail.flat().join('');
     }
 
+    // Function to encode text with a custom code
+    function customEncode(text, code) {
+        let encodedText = '';
+        for (let i = 0; i < text.length; i++) {
+            encodedText += String.fromCharCode(text.charCodeAt(i) ^ parseInt(code, 10));
+        }
+        return encodedText;
+    }
+
+    // Function to decode text with a custom code
+    function customDecode(text, code) {
+        let decodedText = '';
+        for (let i = 0; i < text.length; i++) {
+            decodedText += String.fromCharCode(text.charCodeAt(i) ^ parseInt(code, 10));
+        }
+        return decodedText;
+    }
+
     function detectCodeType(text) {
         // Simple detection logic based on patterns
         if (/^[01\s]+$/.test(text)) return "Binary";
@@ -111,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function encode() {
         const method = methodSelect.value;
         const text = inputText.value;
+        const customCode = customCodeInput.value;
 
         let encodedText;
         switch (method) {
@@ -141,6 +161,13 @@ document.addEventListener("DOMContentLoaded", function() {
             case "railfence":
                 encodedText = railFence(text, 3); // Using 3 rails for demonstration
                 break;
+            case "custom":
+                if (customCode.length === 6) {
+                    encodedText = customEncode(text, customCode);
+                } else {
+                    encodedText = "Invalid code length.";
+                }
+                break;
             default:
                 encodedText = text;
         }
@@ -152,6 +179,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function decode() {
         const method = methodSelect.value;
         const text = inputText.value;
+        const customCode = customCodeInput.value;
 
         let decodedText;
         switch (method) {
@@ -181,6 +209,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 break;
             case "railfence":
                 decodedText = railFence(text, 3); // Rail Fence decoding not implemented
+                break;
+            case "custom":
+                if (customCode.length === 6) {
+                    decodedText = customDecode(text, customCode);
+                } else {
+                    decodedText = "Invalid code length.";
+                }
                 break;
             default:
                 decodedText = text;
