@@ -97,7 +97,9 @@
                     }
                 } else if (encodingType === 'hex') {
                     if (actionType === 'encode') {
-                        resultText = Buffer.from(inputText).toString('hex');
+                        resultText = inputText.split('').map(function(c) {
+                            return ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+                        }).join('');
                     } else {
                         const hex = inputText.match(/.{1,2}/g) || [];
                         resultText = hex.map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
