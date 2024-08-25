@@ -1,239 +1,212 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const methodSelect = document.getElementById("methodSelect");
-    const inputText = document.getElementById("inputText");
-    const outputText = document.getElementById("outputText");
-    const detectedType = document.getElementById("detectedType");
-    const encodeButton = document.getElementById("encodeButton");
-    const decodeButton = document.getElementById("decodeButton");
-    const customCodeInput = document.getElementById("customCode");
-    const customCodeWrapper = document.getElementById("customCodeWrapper");
+// Dark Mode Toggle
+document.getElementById('themeToggle').addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+});
 
-    function updateCustomCodeVisibility() {
-        const method = methodSelect.value;
-        if (method === "custom") {
-            customCodeWrapper.style.display = "block";
-        } else {
-            customCodeWrapper.style.display = "none";
-        }
-    }
+// Real-time Preview
+document.getElementById('inputText').addEventListener('input', function() {
+    const inputText = this.value;
+    document.getElementById('previewText').textContent = inputText;
+});
 
-    methodSelect.addEventListener("change", updateCustomCodeVisibility);
-    updateCustomCodeVisibility(); // Initial check
-
-    function caesarCipher(text, shift) {
-        return text.split('').map(char => {
-            if (char.match(/[a-z]/i)) {
-                const code = char.charCodeAt();
-                const shiftBase = (char.toUpperCase() === char ? 65 : 97);
-                return String.fromCharCode(((code - shiftBase + shift) % 26 + 26) % 26 + shiftBase);
-            }
-            return char;
-        }).join('');
-    }
-
-    function morseCode(text) {
-        const morse = {
-            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
-            'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
-            'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-            'Y': '-.--', 'Z': '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
-            '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----', ', ': '--..--', '.': '.-.-.-',
-            '?': '..--..', '/': '-..-.', '-': '-....-', '(': '-.--.', ')': '-.--.-', '&': '.-...', ':': '---...',
-            ';': '-.-.-.', '=': '-...-', '+': '.-.-.', '-': '-....-', '/': '-..-.', '@': '.--.-', ' ': '/'
+// File Upload Handling
+document.getElementById('uploadButton').addEventListener('click', function() {
+    const file = document.getElementById('fileInput').files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const fileContent = event.target.result;
+            // Example: Display content or process it
+            document.getElementById('inputText').value = fileContent;
         };
-        return text.toUpperCase().split('').map(char => morse[char] || char).join(' ');
+        reader.readAsText(file);
     }
+});
 
-    function base64Encode(text) {
-        return btoa(text);
+// File Download Handling
+function downloadFile(content, filename) {
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.getElementById('downloadLink');
+    link.href = url;
+    link.download = filename;
+    link.textContent = 'Download Result';
+    link.style.display = 'inline';
+}
+
+// Encoding/Decoding Functions (placeholders)
+function encode(text, method) {
+    switch (method) {
+        case 'caesar':
+            return caesarCipher(text, 3); // Example with shift 3
+        case 'morse':
+            return toMorse(text);
+        case 'base64':
+            return btoa(text);
+        case 'binary':
+            return toBinary(text);
+        case 'hex':
+            return toHex(text);
+        case 'rot13':
+            return rot13(text);
+        case 'atbash':
+            return atbash(text);
+        case 'vigenere':
+            return vigenere(text, 'KEY'); // Example key
+        case 'railfence':
+            return railFence(text, 3); // Example with 3 rails
+        case 'custom':
+            const code = document.getElementById('customCode').value;
+            return customEncode(text, code);
+        default:
+            return text;
     }
+}
 
-    function base64Decode(text) {
-        return atob(text);
+function decode(text, method) {
+    switch (method) {
+        case 'caesar':
+            return caesarCipher(text, -3); // Example with shift -3
+        case 'morse':
+            return fromMorse(text);
+        case 'base64':
+            return atob(text);
+        case 'binary':
+            return fromBinary(text);
+        case 'hex':
+            return fromHex(text);
+        case 'rot13':
+            return rot13(text);
+        case 'atbash':
+            return atbash(text);
+        case 'vigenere':
+            return vigenere(text, 'KEY', true); // Example key with decoding
+        case 'railfence':
+            return railFence(text, 3, true); // Example with 3 rails for decoding
+        case 'custom':
+            const code = document.getElementById('customCode').value;
+            return customDecode(text, code);
+        default:
+            return text;
     }
+}
 
-    function binaryEncode(text) {
-        return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
-    }
+// Example Encoding/Decoding Functions
+function caesarCipher(text, shift) {
+    return text.split('')
+        .map(char => String.fromCharCode(((char.charCodeAt(0) - 32 + shift) % 95 + 95) % 95 + 32))
+        .join('');
+}
 
-    function binaryDecode(text) {
-        return text.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
-    }
+function toMorse(text) {
+    const morseCode = {
+        'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+        'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+        'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+        'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+        'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
+        '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+        '8': '---..', '9': '----.', ' ': '/'
+    };
+    return text.toUpperCase().split('').map(char => morseCode[char] || '').join(' ');
+}
 
-    function hexEncode(text) {
-        return text.split('').map(char => char.charCodeAt(0).toString(16)).join(' ');
-    }
+function fromMorse(morse) {
+    const morseToText = {
+        '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F',
+        '--.': 'G', '....': 'H', '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L',
+        '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P', '--.-': 'Q', '.-.': 'R',
+        '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X',
+        '-.--': 'Y', '--..': 'Z', '-----': '0', '.----': '1', '..---': '2',
+        '...--': '3', '....-': '4', '.....': '5', '-....': '6', '--...': '7',
+        '---..': '8', '----.': '9', '/': ' '
+    };
+    return morse.split(' ').map(code => morseToText[code] || '').join('');
+}
 
-    function hexDecode(text) {
-        return text.split(' ').map(hex => String.fromCharCode(parseInt(hex, 16))).join('');
-    }
+function toBinary(text) {
+    return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+}
 
-    function rot13(text) {
-        return caesarCipher(text, 13);
-    }
+function fromBinary(binary) {
+    return binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+}
 
-    function atbash(text) {
-        return text.split('').map(char => {
-            if (char.match(/[a-zA-Z]/)) {
-                return String.fromCharCode(25 - (char.charCodeAt(0) - (char.toUpperCase() === char ? 65 : 97)) + (char.toUpperCase() === char ? 65 : 97));
-            }
-            return char;
-        }).join('');
-    }
+function toHex(text) {
+    return text.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+}
 
-    function vigenere(text, key) {
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        text = text.toUpperCase();
-        key = key.toUpperCase();
-        let keyIndex = 0;
+function fromHex(hex) {
+    return hex.match(/.{1,2}/g).map(hex => String.fromCharCode(parseInt(hex, 16))).join('');
+}
 
-        return text.split('').map(char => {
-            if (alphabet.includes(char)) {
-                const textCharIndex = alphabet.indexOf(char);
-                const keyCharIndex = alphabet.indexOf(key[keyIndex % key.length]);
-                keyIndex++;
-                return alphabet[(textCharIndex + keyCharIndex) % 26];
-            }
-            return char;
-        }).join('');
-    }
+function rot13(text) {
+    return text.replace(/[a-zA-Z]/g, c => String.fromCharCode(((c.charCodeAt(0) - (c < 'a' ? 65 : 97) + 13) % 26) + (c < 'a' ? 65 : 97)));
+}
 
-    function railFence(text, numRails) {
-        let rail = Array.from({ length: numRails }, () => []);
-        let dir = 1;
-        let row = 0;
+function atbash(text) {
+    return text.replace(/[a-zA-Z]/g, c => String.fromCharCode(155 - c.charCodeAt(0)));
+}
 
-        for (let char of text) {
-            rail[row].push(char);
-            row += dir;
-            if (row === 0 || row === numRails - 1) dir *= -1;
+function vigenere(text, key, decode = false) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    key = key.toUpperCase();
+    let result = '';
+    for (let i = 0, j = 0; i < text.length; i++) {
+        const c = text[i];
+        if (alphabet.indexOf(c.toUpperCase()) !== -1) {
+            const shift = alphabet.indexOf(key[j % key.length].toUpperCase());
+            const newIndex = (alphabet.indexOf(c.toUpperCase()) + (decode ? -shift : shift) + 26) % 26;
+            result += (c === c.toUpperCase() ? alphabet[newIndex] : alphabet[newIndex].toLowerCase());
+            j++;
+        } else {
+            result += c;
         }
-
-        return rail.flat().join('');
     }
+    return result;
+}
 
-    function customEncode(text, code) {
-        let encodedText = '';
-        for (let i = 0; i < text.length; i++) {
-            encodedText += String.fromCharCode(text.charCodeAt(i) ^ parseInt(code, 10));
-        }
-        return encodedText;
+function railFence(text, numRails, decode = false) {
+    if (numRails === 1) return text;
+    const rails = Array.from({ length: numRails }, () => []);
+    let rail = 0;
+    let direction = 1;
+    for (let i = 0; i < text.length; i++) {
+        rails[rail].push(text[i]);
+        rail += direction;
+        if (rail === 0 || rail === numRails - 1) direction *= -1;
     }
-
-    function customDecode(text, code) {
-        let decodedText = '';
-        for (let i = 0; i < text.length; i++) {
-            decodedText += String.fromCharCode(text.charCodeAt(i) ^ parseInt(code, 10));
-        }
-        return decodedText;
+    if (!decode) return rails.flat().join('');
+    let result = '';
+    rail = 0;
+    direction = 1;
+    for (let i = 0; i < text.length; i++) {
+        result += rails[rail].shift();
+        rail += direction;
+        if (rail === 0 || rail === numRails - 1) direction *= -1;
     }
+    return result;
+}
 
-    function detectCodeType(text) {
-        if (/^[01\s]+$/.test(text)) return "Binary";
-        if (/^[0-9A-F\s]+$/i.test(text)) return "Hexadecimal";
-        if (/^[\s\.\-\/\|]+$/.test(text)) return "Morse Code";
-        if (/^[A-Za-z\s]+$/.test(text) && /[a-zA-Z]/.test(text)) return "Plain Text";
-        return "Unknown";
-    }
+function customEncode(text, code) {
+    // Basic custom encoding example
+    const shift = parseInt(code, 10) || 0;
+    return text.split('')
+        .map(char => String.fromCharCode(char.charCodeAt(0) + shift))
+        .join('');
+}
 
-    function encode() {
-        const method = methodSelect.value;
-        const text = inputText.value;
-        const customCode = customCodeInput.value;
+function customDecode(text, code) {
+    // Basic custom decoding example
+    const shift = parseInt(code, 10) || 0;
+    return text.split('')
+        .map(char => String.fromCharCode(char.charCodeAt(0) - shift))
+        .join('');
+}
 
-        let encodedText;
-        switch (method) {
-            case "caesar":
-                encodedText = caesarCipher(text, 3);
-                break;
-            case "morse":
-                encodedText = morseCode(text);
-                break;
-            case "base64":
-                encodedText = base64Encode(text);
-                break;
-            case "binary":
-                encodedText = binaryEncode(text);
-                break;
-            case "hex":
-                encodedText = hexEncode(text);
-                break;
-            case "rot13":
-                encodedText = rot13(text);
-                break;
-            case "atbash":
-                encodedText = atbash(text);
-                break;
-            case "vigenere":
-                encodedText = vigenere(text, "KEY");
-                break;
-            case "railfence":
-                encodedText = railFence(text, 3);
-                break;
-            case "custom":
-                if (customCode.length === 6) {
-                    encodedText = customEncode(text, customCode);
-                } else {
-                    encodedText = "Invalid code length.";
-                }
-                break;
-            default:
-                encodedText = text;
-        }
-
-        outputText.textContent = encodedText;
-        detectedType.textContent = `Detected Code Type: ${detectCodeType(encodedText)}`;
-    }
-
-    function decode() {
-        const method = methodSelect.value;
-        const text = inputText.value;
-        const customCode = customCodeInput.value;
-
-        let decodedText;
-        switch (method) {
-            case "base64":
-                decodedText = base64Decode(text);
-                break;
-            case "binary":
-                decodedText = binaryDecode(text);
-                break;
-            case "hex":
-                decodedText = hexDecode(text);
-                break;
-            case "morse":
-                decodedText = morseCode(text); // Morse decoding function not implemented
-                break;
-            case "caesar":
-                decodedText = caesarCipher(text, -3);
-                break;
-            case "rot13":
-                decodedText = rot13(text);
-                break;
-            case "atbash":
-                decodedText = atbash(text);
-                break;
-            case "vigenere":
-                decodedText = vigenere(text, "KEY"); // Reverse Vigenère not implemented
-                break;
-            case "railfence":
-                decodedText = railFence(text, 3); // Rail Fence decoding not implemented
-                break;
-            case "custom":
-                if (customCode.length === 6) {
-                    decodedText = customDecode(text, customCode);
-                } else {
-                    decodedText = "Invalid code length.";
-                }
-                break;
-            default:
-                decodedText = text;
-        }
-
-        outputText.textContent = decodedText;
-        detectedType.textContent = `Detected Code Type: ${detectCodeType(decodedText)}`;
-    }
-
-    encodeButton.addEventListener("click", encode);
-    decodeButton.addEventListener("click", decode);
+// Handling method selection
+document.getElementById('methodSelect').addEventListener('change', function() {
+    const method = this.value;
+    document.getElementById('customCodeWrapper').style.display = (method === 'custom') ? 'block' : 'none';
+    document.getElementById('customCode').value = ''; // Clear custom code input
 });
