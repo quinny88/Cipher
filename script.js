@@ -6,43 +6,51 @@ document.getElementById('applyBtn').addEventListener('click', () => {
     const operation = document.getElementById('operationSelect').value;
     const additionalInput = document.getElementById('additionalInput').value;
 
-    let result;
-    switch (method) {
-        case 'caesar':
-            const shift = parseInt(additionalInput) || 3;
-            result = operation === 'encode'
-                ? caesarCipher(inputText, shift)
-                : caesarCipher(inputText, -shift);
-            break;
-        case 'base64':
-            result = operation === 'encode'
-                ? base64Encode(inputText)
-                : base64Decode(inputText);
-            break;
-        case 'binary':
-            result = operation === 'encode'
-                ? binaryEncode(inputText)
-                : binaryDecode(inputText);
-            break;
-        case 'morse':
-            result = operation === 'encode'
-                ? morseEncode(inputText)
-                : morseDecode(inputText);
-            break;
-        case 'hexadecimal':
-            result = operation === 'encode'
-                ? hexadecimalEncode(inputText)
-                : hexadecimalDecode(inputText);
-            break;
-        case 'auto-detect':
-            result = autoDetect(inputText, operation);
-            break;
+    let result = '';
+    try {
+        switch (method) {
+            case 'caesar':
+                const shift = parseInt(additionalInput, 10) || 3;
+                result = operation === 'encode'
+                    ? caesarCipher(inputText, shift)
+                    : caesarCipher(inputText, -shift);
+                break;
+            case 'base64':
+                result = operation === 'encode'
+                    ? base64Encode(inputText)
+                    : base64Decode(inputText);
+                break;
+            case 'binary':
+                result = operation === 'encode'
+                    ? binaryEncode(inputText)
+                    : binaryDecode(inputText);
+                break;
+            case 'morse':
+                result = operation === 'encode'
+                    ? morseEncode(inputText)
+                    : morseDecode(inputText);
+                break;
+            case 'hexadecimal':
+                result = operation === 'encode'
+                    ? hexadecimalEncode(inputText)
+                    : hexadecimalDecode(inputText);
+                break;
+            case 'auto-detect':
+                result = autoDetect(inputText, operation);
+                break;
+            default:
+                result = 'Invalid method selected';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        result = 'An error occurred. Check console for details.';
     }
 
     document.getElementById('outputText').value = result;
 });
 
 function caesarCipher(text, shift) {
+    if (isNaN(shift)) return 'Invalid shift value';
     return text.toUpperCase().split('').map(char => {
         if (char.match(/[A-Z]/)) {
             let code = char.charCodeAt(0);
@@ -54,11 +62,19 @@ function caesarCipher(text, shift) {
 }
 
 function base64Encode(text) {
-    return btoa(text);
+    try {
+        return btoa(text);
+    } catch (error) {
+        return 'Error encoding to Base64';
+    }
 }
 
 function base64Decode(text) {
-    return atob(text);
+    try {
+        return atob(text);
+    } catch (error) {
+        return 'Error decoding from Base64';
+    }
 }
 
 function binaryEncode(text) {
@@ -102,7 +118,6 @@ function hexadecimalDecode(hex) {
 }
 
 function autoDetect(text, operation) {
-    // Simple auto-detection
     const binaryRegex = /^[01\s]+$/;
     const hexRegex = /^[0-9a-fA-F\s]+$/;
 
@@ -115,4 +130,5 @@ function autoDetect(text, operation) {
     // Additional auto-detection rules can be added here
     return 'Unknown encoding format';
 }
+
 
