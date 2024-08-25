@@ -3,55 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cipher Encoder/Decoder</title>
+    <title>Encoder/Decoder Tool</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Cipher Encoder/Decoder</h1>
-        <div class="form-group">
-            <label for="inputText">Input Text:</label>
-            <textarea id="inputText" placeholder="Enter text here..."></textarea>
-        </div>
-        <div class="form-group">
-            <label for="methodSelect">Select Method:</label>
+        <h1>Encoder/Decoder Tool</h1>
+        <div class="settings">
+            <label for="methodSelect">Choose Method:</label>
             <select id="methodSelect">
                 <option value="caesar">Caesar Cipher</option>
+                <option value="morse">Morse Code</option>
                 <option value="base64">Base64</option>
                 <option value="binary">Binary</option>
-                <option value="morse">Morse Code</option>
                 <option value="hex">Hexadecimal</option>
                 <option value="rot13">ROT13</option>
-                <option value="atbash">Atbash Cipher</option>
-                <option value="vigenere">Vigenère Cipher</option>
-                <option value="railfence">Rail Fence Cipher</option>
-                <option value="playfair">Playfair Cipher</option>
-                <option value="transposition">Transposition Cipher</option>
-                <option value="simple">Simple Substitution</option>
-                <option value="custom">Custom Cipher</option>
-                <option value="ascii">ASCII</option>
-                <option value="url">URL Encoding</option>
-                <option value="auto-detect">Auto Detect</option>
+                <option value="atbash">Atbash</option>
+                <option value="vigenere">Vigenère</option>
+                <option value="railfence">Rail Fence</option>
             </select>
+            <label for="customCode">Custom 6-Digit Code:</label>
+            <input type="text" id="customCode" maxlength="6" placeholder="Enter 6-Digit Code">
         </div>
-        <div class="form-group">
-            <label for="operationSelect">Operation:</label>
-            <select id="operationSelect">
-                <option value="encode">Encode</option>
-                <option value="decode">Decode</option>
-            </select>
-        </div>
-        <div class="form-group" id="settings">
-            <!-- Dynamic settings will be injected here based on method selection -->
-        </div>
-        <div class="form-group">
-            <button id="applyBtn">Apply</button>
-        </div>
-        <div class="form-group">
-            <label for="outputText">Output:</label>
-            <textarea id="outputText" placeholder="Output will appear here..." readonly></textarea>
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
+        <button id="encodeButton">Encode</button>
+        <button id="decodeButton">Decode</button>
+        <div id="output">
+            <h2>Output:</h2>
+            <p id="outputText"></p>
+            <p id="detectedType"></p>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
