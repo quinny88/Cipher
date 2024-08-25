@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encoder/Decoder Tool</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.0.5/jsrsasign-all-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.iife.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Encoder/Decoder Tool</h1>
+        
+        <!-- Theme Toggle Button -->
+        <button id="themeToggle">Toggle Dark Mode</button>
+
         <div class="settings">
-            <label for="methodSelect">Choose Method:</label>
+            <label for="methodSelect" title="Choose the encoding method.">Choose Method:</label>
             <select id="methodSelect">
                 <option value="caesar">Caesar Cipher</option>
                 <option value="morse">Morse Code</option>
@@ -23,20 +29,37 @@
                 <option value="railfence">Rail Fence</option>
                 <option value="custom">Custom Code</option>
             </select>
+            
+            <!-- Custom Code Input -->
             <div id="customCodeWrapper">
-                <label for="customCode">Custom 6-Digit Code:</label>
+                <label for="customCode" title="Enter a 6-digit custom code for encryption/decryption.">Custom 6-Digit Code:</label>
                 <input type="text" id="customCode" maxlength="6" placeholder="Enter 6-Digit Code">
             </div>
+
+            <!-- File Upload -->
+            <input type="file" id="fileInput">
+            <button id="uploadButton">Upload</button>
+            <a id="downloadLink" style="display:none">Download Result</a>
         </div>
+
+        <!-- Text Areas and Buttons -->
         <textarea id="inputText" placeholder="Enter text here..."></textarea>
         <button id="encodeButton">Encode</button>
         <button id="decodeButton">Decode</button>
+
+        <!-- Output Area -->
         <div id="output">
             <h2>Output:</h2>
             <p id="outputText"></p>
             <p id="detectedType"></p>
         </div>
+
+        <!-- Real-time Preview -->
+        <div id="previewArea">
+            <h3>Real-time Preview:</h3>
+            <p id="previewText"></p>
+        </div>
     </div>
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
