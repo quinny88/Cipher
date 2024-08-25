@@ -8,50 +8,78 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f0f0f0;
+            color: #333;
         }
         h1 {
-            color: #333;
+            color: #444;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         textarea {
             width: 100%;
             padding: 10px;
-            margin: 5px 0 15px;
+            margin: 10px 0;
             box-sizing: border-box;
-        }
-        button {
-            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
             font-size: 16px;
         }
+        select, button {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
         .result {
+            background-color: #f4f4f4;
             border: 1px solid #ddd;
             padding: 10px;
-            background-color: #f4f4f4;
+            border-radius: 4px;
+            font-size: 16px;
+            word-wrap: break-word;
         }
     </style>
 </head>
 <body>
-    <h1>Cipher Tool</h1>
-    <p>This tool allows you to encode and decode text using Base64 or Hex encoding.</p>
+    <div class="container">
+        <h1>Cipher Tool</h1>
+        <p>Use this tool to encode or decode text in various formats.</p>
 
-    <h2>Enter Text</h2>
-    <textarea id="inputText" rows="6"></textarea>
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
 
-    <h2>Select Encoding/Decoding Option</h2>
-    <select id="encodingType">
-        <option value="base64">Base64</option>
-        <option value="hex">Hex</option>
-    </select>
+        <h2>Select Encoding/Decoding Option</h2>
+        <select id="encodingType">
+            <option value="base64">Base64</option>
+            <option value="hex">Hex</option>
+        </select>
 
-    <h2>Select Action</h2>
-    <select id="actionType">
-        <option value="encode">Encode</option>
-        <option value="decode">Decode</option>
-    </select>
+        <h2>Select Action</h2>
+        <select id="actionType">
+            <option value="encode">Encode</option>
+            <option value="decode">Decode</option>
+        </select>
 
-    <button onclick="processText()">Process</button>
+        <button onclick="processText()">Process</button>
 
-    <h2>Result</h2>
-    <textarea id="resultText" rows="6" class="result" readonly></textarea>
+        <h2>Result</h2>
+        <textarea id="resultText" class="result" readonly></textarea>
+    </div>
 
     <script>
         function processText() {
