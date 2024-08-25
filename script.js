@@ -1,231 +1,347 @@
-// Dark Mode Toggle
-document.getElementById('themeToggle').addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const methodSelect = document.getElementById('methodSelect');
+    const customCodeSection = document.getElementById('customCodeSection');
+    const customCodeInput = document.getElementById('customCode');
+    const inputText = document.getElementById('inputText');
+    const outputText = document.getElementById('outputText');
+    const detectedType = document.getElementById('detectedType');
+    const previewText = document.getElementById('previewText');
+    const encodeButton = document.getElementById('encodeButton');
+    const decodeButton = document.getElementById('decodeButton');
+    const themeToggle = document.getElementById('themeToggle');
+    const fileInput = document.getElementById('fileInput');
+    const feedbackForm = document.getElementById('feedbackForm');
+    const feedbackText = document.getElementById('feedbackText');
+    const infoText = document.getElementById('infoText');
 
-// Real-time Preview
-document.getElementById('inputText').addEventListener('input', function() {
-    const inputText = this.value;
-    document.getElementById('previewText').textContent = inputText;
-    document.getElementById('previewArea').classList.remove('hidden');
-});
+    let customCode = '';
 
-// File Upload Handling
-document.getElementById('uploadButton').addEventListener('click', function() {
-    const file = document.getElementById('fileInput').files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            document.getElementById('inputText').value = event.target.result;
-        };
-        reader.readAsText(file);
-    }
-});
+    // Toggle dark mode
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+    });
 
-// File Download Handling
-function downloadFile(content, filename) {
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.getElementById('downloadLink');
-    link.href = url;
-    link.download = filename;
-    link.textContent = 'Download Result';
-    link.classList.remove('hidden');
-}
-
-// Encoding/Decoding Functions
-function encode(text, method) {
-    switch (method) {
-        case 'caesar':
-            return caesarCipher(text, 3);
-        case 'morse':
-            return toMorse(text);
-        case 'base64':
-            return btoa(text);
-        case 'binary':
-            return toBinary(text);
-        case 'hex':
-            return toHex(text);
-        case 'rot13':
-            return rot13(text);
-        case 'atbash':
-            return atbash(text);
-        case 'vigenere':
-            return vigenere(text, 'KEY');
-        case 'railfence':
-            return railFence(text, 3);
-        case 'custom':
-            const code = document.getElementById('customCode').value;
-            return customEncode(text, code);
-        default:
-            return text;
-    }
-}
-
-function decode(text, method) {
-    switch (method) {
-        case 'caesar':
-            return caesarCipher(text, -3);
-        case 'morse':
-            return fromMorse(text);
-        case 'base64':
-            return atob(text);
-        case 'binary':
-            return fromBinary(text);
-        case 'hex':
-            return fromHex(text);
-        case 'rot13':
-            return rot13(text);
-        case 'atbash':
-            return atbash(text);
-        case 'vigenere':
-            return vigenere(text, 'KEY', true);
-        case 'railfence':
-            return railFence(text, 3, true);
-        case 'custom':
-            const code = document.getElementById('customCode').value;
-            return customDecode(text, code);
-        default:
-            return text;
-    }
-}
-
-// Example Encoding/Decoding Functions
-function caesarCipher(text, shift) {
-    return text.split('')
-        .map(char => String.fromCharCode(((char.charCodeAt(0) - 32 + shift) % 95 + 95) % 95 + 32))
-        .join('');
-}
-
-function toMorse(text) {
-    const morseCode = {
-        'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
-        'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
-        'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
-        'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-        'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
-        '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
-        '8': '---..', '9': '----.', ' ': '/'
-    };
-    return text.toUpperCase().split('').map(char => morseCode[char] || '').join(' ');
-}
-
-function fromMorse(morse) {
-    const morseToText = {
-        '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F',
-        '--.': 'G', '....': 'H', '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L',
-        '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P', '--.-': 'Q', '.-.': 'R',
-        '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X',
-        '-.--': 'Y', '--..': 'Z', '-----': '0', '.----': '1', '..---': '2',
-        '...--': '3', '....-': '4', '.....': '5', '-....': '6', '--...': '7',
-        '---..': '8', '----.': '9', '/': ' '
-    };
-    return morse.split(' ').map(code => morseToText[code] || '').join('');
-}
-
-function toBinary(text) {
-    return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
-}
-
-function fromBinary(binary) {
-    return binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
-}
-
-function toHex(text) {
-    return text.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
-}
-
-function fromHex(hex) {
-    return hex.match(/.{1,2}/g).map(hex => String.fromCharCode(parseInt(hex, 16))).join('');
-}
-
-function rot13(text) {
-    return text.replace(/[a-zA-Z]/g, c => String.fromCharCode(((c.charCodeAt(0) - (c < 'a' ? 65 : 97) + 13) % 26) + (c < 'a' ? 65 : 97)));
-}
-
-function atbash(text) {
-    return text.replace(/[a-zA-Z]/g, c => String.fromCharCode(155 - c.charCodeAt(0)));
-}
-
-function vigenere(text, key, decode = false) {
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    key = key.toUpperCase();
-    let result = '';
-    for (let i = 0, j = 0; i < text.length; i++) {
-        const c = text[i];
-        if (alphabet.indexOf(c.toUpperCase()) !== -1) {
-            const shift = alphabet.indexOf(key[j % key.length].toUpperCase());
-            const newIndex = (alphabet.indexOf(c.toUpperCase()) + (decode ? -shift : shift) + 26) % 26;
-            result += (c === c.toUpperCase() ? alphabet[newIndex] : alphabet[newIndex].toLowerCase());
-            j++;
-        } else {
-            result += c;
+    // Show/Hide custom code section
+    methodSelect.addEventListener('change', () => {
+        const method = methodSelect.value;
+        customCodeSection.style.display = method === 'custom' ? 'block' : 'none';
+        if (method !== 'custom') {
+            customCodeInput.value = '';
         }
+        updateInfoText(method);
+    });
+
+    // Handle file input
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                inputText.value = reader.result;
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    // Encode and decode
+    encodeButton.addEventListener('click', () => {
+        const method = methodSelect.value;
+        const text = inputText.value;
+        const customCode = customCodeInput.value || '';
+
+        let result = '';
+        switch (method) {
+            case 'caesar':
+                result = caesarCipher(text, parseInt(customCode, 10) || 3); // Custom shift value
+                break;
+            case 'morse':
+                result = textToMorse(text);
+                break;
+            case 'base64':
+                result = btoa(text);
+                break;
+            case 'binary':
+                result = textToBinary(text);
+                break;
+            case 'hex':
+                result = textToHex(text);
+                break;
+            case 'rot13':
+                result = rot13(text);
+                break;
+            case 'atbash':
+                result = atbashCipher(text);
+                break;
+            case 'vigenere':
+                result = vigenereCipher(text, customCode);
+                break;
+            case 'railfence':
+                result = railFence(text, parseInt(customCode, 10) || 3); // Custom number of rails
+                break;
+            case 'playfair':
+                result = playfairCipher(text, customCode);
+                break;
+            case 'substitution':
+                result = substitutionCipher(text, customCode);
+                break;
+            case 'transposition':
+                result = transpositionCipher(text, customCode);
+                break;
+            case 'columnar':
+                result = columnarTransposition(text, customCode);
+                break;
+            case 'scytale':
+                result = scytaleCipher(text, parseInt(customCode, 10) || 5); // Custom diameter
+                break;
+            case 'xorcipher':
+                result = xorCipher(text, customCode);
+                break;
+            case 'affine':
+                const [a, b] = customCode.split(',').map(num => parseInt(num, 10));
+                result = affineCipher(text, a, b);
+                break;
+            case 'keyword':
+                result = keywordCipher(text, customCode);
+                break;
+            case 'base32':
+                result = base32Encode(text);
+                break;
+            case 'base58':
+                result = base58Encode(text);
+                break;
+            case 'custom':
+                result = customEncodeDecode(text, customCode, true); // Encoding
+                break;
+            default:
+                result = 'Unknown method';
+        }
+        outputText.textContent = result;
+        detectedType.textContent = detectType(result);
+        previewText.textContent = result;
+    });
+
+    decodeButton.addEventListener('click', () => {
+        const method = methodSelect.value;
+        const text = inputText.value;
+        const customCode = customCodeInput.value || '';
+
+        let result = '';
+        switch (method) {
+            case 'caesar':
+                result = caesarCipher(text, -(parseInt(customCode, 10) || 3)); // Custom shift value
+                break;
+            case 'morse':
+                result = morseToText(text);
+                break;
+            case 'base64':
+                result = atob(text);
+                break;
+            case 'binary':
+                result = binaryToText(text);
+                break;
+            case 'hex':
+                result = hexToText(text);
+                break;
+            case 'rot13':
+                result = rot13(text);
+                break;
+            case 'atbash':
+                result = atbashCipher(text);
+                break;
+            case 'vigenere':
+                result = vigenereCipher(text, customCode, false);
+                break;
+            case 'railfence':
+                result = railFenceDecode(text, parseInt(customCode, 10) || 3); // Custom number of rails
+                break;
+            case 'playfair':
+                result = playfairCipher(text, customCode, false);
+                break;
+            case 'substitution':
+                result = substitutionCipher(text, customCode, false);
+                break;
+            case 'transposition':
+                result = transpositionCipher(text, customCode, false);
+                break;
+            case 'columnar':
+                result = columnarTransposition(text, customCode, false);
+                break;
+            case 'scytale':
+                result = scytaleCipher(text, parseInt(customCode, 10) || 5, false); // Custom diameter
+                break;
+            case 'xorcipher':
+                result = xorCipher(text, customCode, false);
+                break;
+            case 'affine':
+                const [a, b] = customCode.split(',').map(num => parseInt(num, 10));
+                result = affineCipher(text, a, b, false);
+                break;
+            case 'keyword':
+                result = keywordCipher(text, customCode, false);
+                break;
+            case 'base32':
+                result = base32Decode(text);
+                break;
+            case 'base58':
+                result = base58Decode(text);
+                break;
+            case 'custom':
+                result = customEncodeDecode(text, customCode, false); // Decoding
+                break;
+            default:
+                result = 'Unknown method';
+        }
+        outputText.textContent = result;
+        detectedType.textContent = detectType(result);
+        previewText.textContent = result;
+    });
+
+    feedbackForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Thank you for your feedback!');
+        feedbackText.value = '';
+    });
+
+    function updateInfoText(method) {
+        const descriptions = {
+            caesar: "Caesar Cipher: Shifts letters by a fixed number.",
+            morse: "Morse Code: Encodes text into Morse code.",
+            base64: "Base64: Encodes text into Base64 format.",
+            binary: "Binary: Encodes text into binary format.",
+            hex: "Hexadecimal: Encodes text into hexadecimal format.",
+            rot13: "ROT13: Rotates letters by 13 places.",
+            atbash: "Atbash: Reverses the alphabet.",
+            vigenere: "Vigenère: Uses a keyword to encode text.",
+            railfence: "Rail Fence: Writes text in a zigzag pattern.",
+            playfair: "Playfair Cipher: Uses a 5x5 grid with a keyword.",
+            substitution: "Substitution Cipher: Replaces characters with others.",
+            transposition: "Transposition Cipher: Rearranges characters.",
+            columnar: "Columnar Transposition: Uses a grid to reorder text.",
+            scytale: "Scytale Cipher: Uses a cylindrical tool for encoding.",
+            xorcipher: "XOR Cipher: Uses bitwise XOR for encoding.",
+            affine: "Affine Cipher: Uses a mathematical function for encoding.",
+            keyword: "Keyword Cipher: Uses a keyword to create a substitution alphabet.",
+            base32: "Base32: Encodes text into Base32 format.",
+            base58: "Base58: Encodes text into Base58 format.",
+            custom: "Custom Code: Allows custom encoding/decoding based on user input."
+        };
+        infoText.textContent = descriptions[method] || "Select a method to see details.";
     }
-    return result;
-}
 
-function railFence(text, numRails, decode = false) {
-    if (numRails === 1) return text;
-    const rails = Array.from({ length: numRails }, () => []);
-    let rail = 0;
-    let direction = 1;
-    for (let i = 0; i < text.length; i++) {
-        rails[rail].push(text[i]);
-        rail += direction;
-        if (rail === 0 || rail === numRails - 1) direction *= -1;
+    function detectType(text) {
+        if (/^[01\s]+$/.test(text)) return 'Binary';
+        if (/^[a-fA-F0-9\s]+$/.test(text)) return 'Hexadecimal';
+        if (/^[a-zA-Z0-9+\/=]+$/.test(text)) return 'Base64';
+        if (/^[\.\-\/\s]+$/.test(text)) return 'Morse Code';
+        // Add more detection as needed
+        return 'Plain Text';
     }
-    if (!decode) return rails.flat().join('');
-    let result = '';
-    rail = 0;
-    direction = 1;
-    for (let i = 0; i < text.length; i++) {
-        result += rails[rail].shift();
-        rail += direction;
-        if (rail === 0 || rail === numRails - 1) direction *= -1;
+
+    // Define encoding/decoding functions for each method here...
+    function caesarCipher(text, shift) {
+        // Implement Caesar Cipher
     }
-    return result;
-}
 
-function customEncode(text, code) {
-    const shift = parseInt(code, 10) || 0;
-    return text.split('')
-        .map(char => String.fromCharCode(char.charCodeAt(0) + shift))
-        .join('');
-}
+    function morseCode(text) {
+        // Implement Morse Code encoding
+    }
 
-function customDecode(text, code) {
-    const shift = parseInt(code, 10) || 0;
-    return text.split('')
-        .map(char => String.fromCharCode(char.charCodeAt(0) - shift))
-        .join('');
-}
+    function morseToText(text) {
+        // Implement Morse Code decoding
+    }
 
-// Handling method selection and custom code visibility
-document.getElementById('methodSelect').addEventListener('change', function() {
-    const method = this.value;
-    document.getElementById('customCodeWrapper').style.display = (method === 'custom') ? 'block' : 'none';
-    document.getElementById('customCode').value = ''; // Clear custom code input
-    document.getElementById('previewArea').classList.add('hidden');
-});
+    function textToBinary(text) {
+        return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+    }
 
-// Encode/Decode Button Handlers
-document.getElementById('encodeButton').addEventListener('click', function() {
-    const method = document.getElementById('methodSelect').value;
-    const inputText = document.getElementById('inputText').value;
-    const result = encode(inputText, method);
-    document.getElementById('outputText').textContent = result;
-    document.getElementById('detectedType').textContent = 'Detected Code Type: ' + method;
-    document.getElementById('downloadLink').classList.remove('hidden');
-    downloadFile(result, 'encoded.txt');
-});
+    function binaryToText(binary) {
+        return binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+    }
 
-document.getElementById('decodeButton').addEventListener('click', function() {
-    const method = document.getElementById('methodSelect').value;
-    const inputText = document.getElementById('inputText').value;
-    const result = decode(inputText, method);
-    document.getElementById('outputText').textContent = result;
-    document.getElementById('detectedType').textContent = 'Detected Code Type: ' + method;
-    document.getElementById('downloadLink').classList.remove('hidden');
-    downloadFile(result, 'decoded.txt');
+    function textToHex(text) {
+        return text.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+    }
+
+    function hexToText(hex) {
+        return hex.split(' ').map(hexStr => String.fromCharCode(parseInt(hexStr, 16))).join('');
+    }
+
+    function rot13(text) {
+        return text.replace(/[a-zA-Z]/g, (char) => {
+            const base = char <= 'Z' ? 'A' : 'a';
+            return String.fromCharCode((char.charCodeAt(0) - base.charCodeAt(0) + 13) % 26 + base.charCodeAt(0));
+        });
+    }
+
+    function atbashCipher(text) {
+        return text.split('').map(char => {
+            if (char >= 'a' && char <= 'z') return String.fromCharCode('z'.charCodeAt(0) - (char.charCodeAt(0) - 'a'.charCodeAt(0)));
+            if (char >= 'A' && char <= 'Z') return String.fromCharCode('Z'.charCodeAt(0) - (char.charCodeAt(0) - 'A'.charCodeAt(0)));
+            return char;
+        }).join('');
+    }
+
+    function vigenereCipher(text, keyword, encode = true) {
+        // Implement Vigenère Cipher
+    }
+
+    function railFence(text, rails) {
+        // Implement Rail Fence Cipher
+    }
+
+    function railFenceDecode(text, rails) {
+        // Implement Rail Fence Decoding
+    }
+
+    function playfairCipher(text, keyword, encode = true) {
+        // Implement Playfair Cipher
+    }
+
+    function substitutionCipher(text, key, encode = true) {
+        // Implement Substitution Cipher
+    }
+
+    function transpositionCipher(text, key, encode = true) {
+        // Implement Transposition Cipher
+    }
+
+    function columnarTransposition(text, key, encode = true) {
+        // Implement Columnar Transposition
+    }
+
+    function scytaleCipher(text, diameter, encode = true) {
+        // Implement Scytale Cipher
+    }
+
+    function xorCipher(text, key, encode = true) {
+        // Implement XOR Cipher
+    }
+
+    function affineCipher(text, a, b, encode = true) {
+        // Implement Affine Cipher
+    }
+
+    function keywordCipher(text, keyword, encode = true) {
+        // Implement Keyword Cipher
+    }
+
+    function base32Encode(text) {
+        // Implement Base32 Encoding
+    }
+
+    function base32Decode(text) {
+        // Implement Base32 Decoding
+    }
+
+    function base58Encode(text) {
+        // Implement Base58 Encoding
+    }
+
+    function base58Decode(text) {
+        // Implement Base58 Decoding
+    }
+
+    function customEncodeDecode(text, code, encode = true) {
+        // Implement Custom Encoding/Decoding
+    }
 });
