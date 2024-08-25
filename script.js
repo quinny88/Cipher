@@ -7,6 +7,7 @@ document.getElementById('themeToggle').addEventListener('click', function() {
 document.getElementById('inputText').addEventListener('input', function() {
     const inputText = this.value;
     document.getElementById('previewText').textContent = inputText;
+    document.getElementById('previewArea').classList.remove('hidden');
 });
 
 // File Upload Handling
@@ -15,9 +16,7 @@ document.getElementById('uploadButton').addEventListener('click', function() {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
-            const fileContent = event.target.result;
-            // Example: Display content or process it
-            document.getElementById('inputText').value = fileContent;
+            document.getElementById('inputText').value = event.target.result;
         };
         reader.readAsText(file);
     }
@@ -31,14 +30,14 @@ function downloadFile(content, filename) {
     link.href = url;
     link.download = filename;
     link.textContent = 'Download Result';
-    link.style.display = 'inline';
+    link.classList.remove('hidden');
 }
 
-// Encoding/Decoding Functions (placeholders)
+// Encoding/Decoding Functions
 function encode(text, method) {
     switch (method) {
         case 'caesar':
-            return caesarCipher(text, 3); // Example with shift 3
+            return caesarCipher(text, 3);
         case 'morse':
             return toMorse(text);
         case 'base64':
@@ -52,9 +51,9 @@ function encode(text, method) {
         case 'atbash':
             return atbash(text);
         case 'vigenere':
-            return vigenere(text, 'KEY'); // Example key
+            return vigenere(text, 'KEY');
         case 'railfence':
-            return railFence(text, 3); // Example with 3 rails
+            return railFence(text, 3);
         case 'custom':
             const code = document.getElementById('customCode').value;
             return customEncode(text, code);
@@ -66,7 +65,7 @@ function encode(text, method) {
 function decode(text, method) {
     switch (method) {
         case 'caesar':
-            return caesarCipher(text, -3); // Example with shift -3
+            return caesarCipher(text, -3);
         case 'morse':
             return fromMorse(text);
         case 'base64':
@@ -80,9 +79,9 @@ function decode(text, method) {
         case 'atbash':
             return atbash(text);
         case 'vigenere':
-            return vigenere(text, 'KEY', true); // Example key with decoding
+            return vigenere(text, 'KEY', true);
         case 'railfence':
-            return railFence(text, 3, true); // Example with 3 rails for decoding
+            return railFence(text, 3, true);
         case 'custom':
             const code = document.getElementById('customCode').value;
             return customDecode(text, code);
@@ -189,7 +188,6 @@ function railFence(text, numRails, decode = false) {
 }
 
 function customEncode(text, code) {
-    // Basic custom encoding example
     const shift = parseInt(code, 10) || 0;
     return text.split('')
         .map(char => String.fromCharCode(char.charCodeAt(0) + shift))
@@ -197,16 +195,37 @@ function customEncode(text, code) {
 }
 
 function customDecode(text, code) {
-    // Basic custom decoding example
     const shift = parseInt(code, 10) || 0;
     return text.split('')
         .map(char => String.fromCharCode(char.charCodeAt(0) - shift))
         .join('');
 }
 
-// Handling method selection
+// Handling method selection and custom code visibility
 document.getElementById('methodSelect').addEventListener('change', function() {
     const method = this.value;
     document.getElementById('customCodeWrapper').style.display = (method === 'custom') ? 'block' : 'none';
     document.getElementById('customCode').value = ''; // Clear custom code input
+    document.getElementById('previewArea').classList.add('hidden');
+});
+
+// Encode/Decode Button Handlers
+document.getElementById('encodeButton').addEventListener('click', function() {
+    const method = document.getElementById('methodSelect').value;
+    const inputText = document.getElementById('inputText').value;
+    const result = encode(inputText, method);
+    document.getElementById('outputText').textContent = result;
+    document.getElementById('detectedType').textContent = 'Detected Code Type: ' + method;
+    document.getElementById('downloadLink').classList.remove('hidden');
+    downloadFile(result, 'encoded.txt');
+});
+
+document.getElementById('decodeButton').addEventListener('click', function() {
+    const method = document.getElementById('methodSelect').value;
+    const inputText = document.getElementById('inputText').value;
+    const result = decode(inputText, method);
+    document.getElementById('outputText').textContent = result;
+    document.getElementById('detectedType').textContent = 'Detected Code Type: ' + method;
+    document.getElementById('downloadLink').classList.remove('hidden');
+    downloadFile(result, 'decoded.txt');
 });
