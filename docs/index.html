@@ -12,37 +12,75 @@
         h1 {
             color: #333;
         }
-        pre {
-            background-color: #f4f4f4;
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .result {
             border: 1px solid #ddd;
             padding: 10px;
+            background-color: #f4f4f4;
         }
     </style>
 </head>
 <body>
     <h1>Cipher Tool</h1>
-    <p>This project is a Python application with a GUI for encoding and decoding text in various formats.</p>
-    <h2>Features</h2>
-    <ul>
-        <li>Encode and decode text in Base64 and Hex formats.</li>
-        <li>Simple graphical user interface.</li>
-    </ul>
-    <h2>Installation</h2>
-    <pre>
-    1. Clone the repository:
-    git clone https://github.com/yourusername/cipher.git
+    <p>This tool allows you to encode and decode text using Base64 or Hex encoding.</p>
 
-    2. Navigate to the project directory:
-    cd cipher
+    <h2>Enter Text</h2>
+    <textarea id="inputText" rows="6"></textarea>
 
-    3. Install dependencies:
-    pip install -r requirements.txt
+    <h2>Select Encoding/Decoding Option</h2>
+    <select id="encodingType">
+        <option value="base64">Base64</option>
+        <option value="hex">Hex</option>
+    </select>
 
-    4. Run the application:
-    python main.py
-    </pre>
-    <h2>License</h2>
-    <p>This project is licensed under the MIT License - see the LICENSE file for details.</p>
+    <h2>Select Action</h2>
+    <select id="actionType">
+        <option value="encode">Encode</option>
+        <option value="decode">Decode</option>
+    </select>
+
+    <button onclick="processText()">Process</button>
+
+    <h2>Result</h2>
+    <textarea id="resultText" rows="6" class="result" readonly></textarea>
+
+    <script>
+        function processText() {
+            const inputText = document.getElementById('inputText').value;
+            const encodingType = document.getElementById('encodingType').value;
+            const actionType = document.getElementById('actionType').value;
+            let resultText = '';
+
+            try {
+                if (encodingType === 'base64') {
+                    if (actionType === 'encode') {
+                        resultText = btoa(inputText);
+                    } else {
+                        resultText = atob(inputText);
+                    }
+                } else if (encodingType === 'hex') {
+                    if (actionType === 'encode') {
+                        resultText = Buffer.from(inputText).toString('hex');
+                    } else {
+                        const hex = inputText.match(/.{1,2}/g) || [];
+                        resultText = hex.map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+                    }
+                }
+            } catch (error) {
+                resultText = 'Error: ' + error.message;
+            }
+
+            document.getElementById('resultText').value = resultText;
+        }
+    </script>
 </body>
 </html>
-
