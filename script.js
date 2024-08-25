@@ -6,8 +6,20 @@ document.addEventListener("DOMContentLoaded", function() {
     const encodeButton = document.getElementById("encodeButton");
     const decodeButton = document.getElementById("decodeButton");
     const customCodeInput = document.getElementById("customCode");
+    const customCodeWrapper = document.getElementById("customCodeWrapper");
 
-    // Helper functions for different encoding methods
+    function updateCustomCodeVisibility() {
+        const method = methodSelect.value;
+        if (method === "custom") {
+            customCodeWrapper.style.display = "block";
+        } else {
+            customCodeWrapper.style.display = "none";
+        }
+    }
+
+    methodSelect.addEventListener("change", updateCustomCodeVisibility);
+    updateCustomCodeVisibility(); // Initial check
+
     function caesarCipher(text, shift) {
         return text.split('').map(char => {
             if (char.match(/[a-z]/i)) {
@@ -100,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return rail.flat().join('');
     }
 
-    // Function to encode text with a custom code
     function customEncode(text, code) {
         let encodedText = '';
         for (let i = 0; i < text.length; i++) {
@@ -109,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return encodedText;
     }
 
-    // Function to decode text with a custom code
     function customDecode(text, code) {
         let decodedText = '';
         for (let i = 0; i < text.length; i++) {
@@ -119,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function detectCodeType(text) {
-        // Simple detection logic based on patterns
         if (/^[01\s]+$/.test(text)) return "Binary";
         if (/^[0-9A-F\s]+$/i.test(text)) return "Hexadecimal";
         if (/^[\s\.\-\/\|]+$/.test(text)) return "Morse Code";
@@ -135,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let encodedText;
         switch (method) {
             case "caesar":
-                encodedText = caesarCipher(text, 3); // Using a shift of 3 for demonstration
+                encodedText = caesarCipher(text, 3);
                 break;
             case "morse":
                 encodedText = morseCode(text);
@@ -156,10 +165,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 encodedText = atbash(text);
                 break;
             case "vigenere":
-                encodedText = vigenere(text, "KEY"); // Use a fixed key for demonstration
+                encodedText = vigenere(text, "KEY");
                 break;
             case "railfence":
-                encodedText = railFence(text, 3); // Using 3 rails for demonstration
+                encodedText = railFence(text, 3);
                 break;
             case "custom":
                 if (customCode.length === 6) {
@@ -196,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 decodedText = morseCode(text); // Morse decoding function not implemented
                 break;
             case "caesar":
-                decodedText = caesarCipher(text, -3); // Reverse shift for Caesar
+                decodedText = caesarCipher(text, -3);
                 break;
             case "rot13":
                 decodedText = rot13(text);
