@@ -5,21 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cipher Tool</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Cipher Tool</h1>
-        <button id="toggleDarkMode">Toggle Dark Mode</button>
+        <button id="toggleDarkModeButton">Toggle Dark Mode</button>
 
-        <div class="tabs">
-            <button class="tab-button active" data-tab="encodeDecodeTab">Encode/Decode</button>
-            <button class="tab-button" data-tab="autoDetectTab">Auto Detect</button>
-            <button class="tab-button" data-tab="infoTab">Code Info</button>
-            <button class="tab-button" data-tab="settingsTab">Settings</button>
+        <div class="tab-container">
+            <button class="tab" data-tab="encodeTab">Encode/Decode</button>
+            <button class="tab" data-tab="autoDetectTab">Auto-Detect</button>
+            <button class="tab" data-tab="infoTab">Cipher Info</button>
         </div>
 
-        <div id="encodeDecodeTab" class="tab-content active">
+        <div class="tab-content" id="encodeTab">
             <label for="methodSelect">Choose Method:</label>
             <select id="methodSelect">
                 <option value="caesar">Caesar Cipher</option>
@@ -31,62 +29,41 @@
                 <option value="atbash">Atbash</option>
                 <option value="vigenere">Vigenère</option>
                 <option value="railfence">Rail Fence</option>
-                <option value="affine">Affine Cipher</option>
-                <option value="baconian">Baconian Cipher</option>
-                <option value="beaufort">Beaufort Cipher</option>
-                <option value="playfair">Playfair Cipher</option>
-                <option value="polybius">Polybius Square</option>
-                <option value="scytale">Scytale Cipher</option>
-                <option value="substitution">Substitution Cipher</option>
-                <option value="hill">Hill Cipher</option>
-                <option value="xor">XOR Cipher</option>
-                <option value="custom">Custom Code</option>
+                <option value="custom">Custom Cipher</option>
             </select>
 
             <div id="customCodeContainer" class="hidden">
-                <label for="customCodeInput">Enter 6-Digit Code:</label>
-                <input type="text" id="customCodeInput" maxlength="6" placeholder="6 alphanumeric characters">
+                <label for="customCodeInput">Custom 6-Digit/Character Code:</label>
+                <input type="text" id="customCodeInput" maxlength="6">
             </div>
 
-            <textarea id="inputText" placeholder="Enter text here..."></textarea>
-            <div>
-                <button id="encodeButton">Encode</button>
-                <button id="decodeButton">Decode</button>
-            </div>
+            <label for="shiftInput" id="shiftLabel" class="hidden">Shift:</label>
+            <input type="number" id="shiftInput" class="hidden" value="3">
 
-            <label for="fileInput">Upload File:</label>
-            <input type="file" id="fileInput">
-            <textarea id="outputText" placeholder="Output will appear here..." readonly></textarea>
-            <div id="detectedType">Detected Code Type: <span id="detectedTypeText">Plain Text</span></div>
-            <div id="realTimePreview">Real-time Preview: <span id="previewText"></span></div>
+            <label for="inputText">Input Text:</label>
+            <textarea id="inputText"></textarea>
+
+            <button id="encodeButton">Encode</button>
+            <button id="decodeButton">Decode</button>
+
+            <label for="outputText">Output:</label>
+            <textarea id="outputText" readonly></textarea>
+            <div id="realTimePreview"></div>
         </div>
 
-        <div id="autoDetectTab" class="tab-content">
-            <h2>Auto Detect Code Type</h2>
-            <textarea id="autoDetectInput" placeholder="Paste code here..."></textarea>
-            <button id="detectButton">Detect</button>
+        <div class="tab-content" id="autoDetectTab">
+            <label for="autoDetectInput">Input Text for Auto-Detect:</label>
+            <textarea id="autoDetectInput"></textarea>
+            <button id="detectButton">Detect Code Type</button>
             <div id="detectResult"></div>
         </div>
 
-        <div id="infoTab" class="tab-content">
-            <h2>Code Information</h2>
-            <div id="codeInfoContent">
-                <!-- Code info will be dynamically populated -->
-            </div>
-        </div>
-
-        <div id="settingsTab" class="tab-content">
-            <h2>Settings</h2>
-            <label for="themeSelect">Choose Theme:</label>
-            <select id="themeSelect">
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-                <option value="custom">Custom</option>
-            </select>
-            <button id="resetButton">Reset Settings</button>
+        <div class="tab-content" id="infoTab">
+            <h2>Cipher Information</h2>
+            <div id="codeInfoContent"></div>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
-
-           
